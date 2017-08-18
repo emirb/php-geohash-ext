@@ -1,6 +1,7 @@
 PHP Geohash library
 =======
 [![Build Status](https://travis-ci.org/emirb/php-geohash-ext.svg?branch=master)](https://travis-ci.org/emirb/php-geohash-etx)
+![PHP >5.4](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg)
 
 Introduction
 =======
@@ -23,17 +24,17 @@ Add geohash.so to your php.ini.
 Usage
 ====
 ```php
-	geohash_encode(float $latitude, float $longitude, int $precision=12): string;
+geohash_encode(float $latitude, float $longitude, int $precision=12): string;
 
 
 
-	/**
-	 *  Returns array with latitude and longitude, i.e.
-	 *  Array
-	 *	(
-	 *		[latitude] => 45.18
-	 *		[longitude] => 12.19
-	 *	)
-	 */
-	geohash_decode(string $hash): array;
+/**
+ *  Returns array with latitude and longitude, i.e.
+ *  Array
+ *	(
+ *		[latitude] => 45.18
+ *		[longitude] => 12.19
+ *	)
+ */
+geohash_decode(string $hash): array;
 ```
