@@ -15,5 +15,4 @@ before_script:
   - phpize && ./configure && make clean && make
 
 script:
-  - make test && cat tests/*
-  - if [ -f tests/001.diff ]; then echo "Tests failed" && exit 1; fi
+  - make test
