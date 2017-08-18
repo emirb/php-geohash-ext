@@ -1,0 +1,4 @@
+Original implementation by Derek Smith: https://github.com/simplegeo/libgeohash
+Improved by shenzhe and added PHP7 support: https://github.com/shenzhe/geohash
+Maintained by emirb, added tests and submitted to PECL: https://github.com/emir/geohash-php
+
