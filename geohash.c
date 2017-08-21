@@ -187,7 +187,9 @@ PHP_FUNCTION(geohash_decode)
 PHP_MINFO_FUNCTION(geohash)
 {
     php_info_print_table_start();
-    php_info_print_table_header(2, "geohash support", "enabled");
+    php_info_print_table_row(2, "geohash support", "enabled");
+    php_info_print_table_row(2, "geohash version", PHP_GEOHASH_VERSION);
+
     php_info_print_table_end();
 }
 /* }}} */
