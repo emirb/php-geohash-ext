@@ -9,10 +9,6 @@
 #include "php_geohash.h"
 
 static char char_map[32] =  "0123456789bcdefghjkmnpqrstuvwxyz";
-/* True global resources - no need for thread safety here */
-static int le_geohash;
-
-
 
 static char*
 _geohash_encode(double lat, double lng, int precision) {
@@ -20,55 +16,55 @@ _geohash_encode(double lat, double lng, int precision) {
     char* hash;
 
 
-        hash = (char*)emalloc(sizeof(char) * (precision + 1));
-        if (hash == NULL)
-            return NULL;
-        
-        hash[precision] = '\0';
+    hash = (char*)emalloc(sizeof(char) * (precision + 1));
+    if (hash == NULL)
+        return NULL;
 
-        precision *= 5.0;
+    hash[precision] = '\0';
 
-        Interval lat_interval = {MAX_LAT, MIN_LAT};
-        Interval lng_interval = {MAX_LONG, MIN_LONG};
+    precision *= 5.0;
 
-        Interval *interval;
-        double coord, mid;
-        int is_even = 1;
-        unsigned int hashChar = 0;
-        int i;
-        for(i = 1; i <= precision; i++) {
+    Interval lat_interval = {MAX_LAT, MIN_LAT};
+    Interval lng_interval = {MAX_LONG, MIN_LONG};
 
-            if(is_even) {
+    Interval *interval;
+    double coord, mid;
+    int is_even = 1;
+    unsigned int hashChar = 0;
+    int i;
+    for(i = 1; i <= precision; i++) {
 
-                interval = &lng_interval;
-                coord = lng;
+        if(is_even) {
 
-            } else {
+            interval = &lng_interval;
+            coord = lng;
 
-                interval = &lat_interval;
-                coord = lat;
-            }
+        } else {
 
-            mid = (interval->low + interval->high) / 2.0;
-            hashChar = hashChar << 1;
-
-            if(coord > mid) {
-
-                interval->low = mid;
-                hashChar |= 0x01;
-
-            } else
-                interval->high = mid;
-
-            if(!(i % 5)) {
-
-                hash[(i - 1) / 5] = char_map[hashChar];
-                hashChar = 0;
-
-            }
-
-            is_even = !is_even;
+            interval = &lat_interval;
+            coord = lat;
         }
+
+        mid = (interval->low + interval->high) / 2.0;
+        hashChar = hashChar << 1;
+
+        if(coord > mid) {
+
+            interval->low = mid;
+            hashChar |= 0x01;
+
+        } else
+            interval->high = mid;
+
+        if(!(i % 5)) {
+
+            hash[(i - 1) / 5] = char_map[hashChar];
+            hashChar = 0;
+
+        }
+
+        is_even = !is_even;
+    }
 
 
     return hash;
@@ -77,7 +73,7 @@ _geohash_encode(double lat, double lng, int precision) {
 
 static unsigned int index_for_char(char c, char *string) {
 
-    int index = -1;
+    unsigned int index = -1;
     int string_amount = strlen(string);
     int i;
     for(i = 0; i < string_amount; i++) {
@@ -97,7 +93,7 @@ GeoCoord _geohash_decode(char *hash) {
 
     GeoCoord coordinate = {0.0, 0.0};
 
-    if(hash) {
+    if (hash) {
 
         int char_amount = strlen(hash);
 
@@ -149,11 +145,11 @@ GeoCoord _geohash_decode(char *hash) {
  */
 PHP_FUNCTION(geohash_encode)
 {
-  double lat;
-double lng;
-long precision = 12;
-zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &lat, &lng, &precision);
-   char *hash;
+    double lat;
+    double lng;
+    int precision = 12;
+    zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &lat, &lng, &precision);
+    char *hash;
     hash = _geohash_encode(lat, lng, precision);
     #if PHP_MAJOR_VERSION < 7
     RETURN_STRING(hash, 0);
