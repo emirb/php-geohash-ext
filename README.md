@@ -1,6 +1,6 @@
 PHP Geohash library
 =======
-[![Build Status](https://travis-ci.org/emirb/php-geohash-ext.svg?branch=master)](https://travis-ci.org/emirb/php-geohash-etx)
+[![Build Status](https://travis-ci.org/emirb/php-geohash-ext.svg?branch=master)](https://travis-ci.org/emirb/php-geohash-ext)
 ![PHP >5.4](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg)
 
 Introduction

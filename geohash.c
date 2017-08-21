@@ -147,7 +147,7 @@ PHP_FUNCTION(geohash_encode)
 {
     double lat;
     double lng;
-    int precision = 12;
+    long precision = 12;
     zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &lat, &lng, &precision);
     char *hash;
     hash = _geohash_encode(lat, lng, precision);

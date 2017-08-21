@@ -7,6 +7,8 @@ php:
   - 5.6
   - 5.5
   - 5.4
+  - nightly
+  - hhvm
 
 env:
   - NO_INTERACTION=1
@@ -15,4 +17,7 @@ before_script:
   - phpize && ./configure && make clean && make
 
 script:
-  - make test
+  - make test && if [ -f tests/001.diff ]; then echo "Tests failed" && exit 1; fi
+  - make install
+  - echo "extension = geohash.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - php example.php
