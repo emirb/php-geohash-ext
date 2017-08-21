@@ -29,8 +29,6 @@ Usage
  */
 geohash_encode(float $latitude, float $longitude, int $precision=12): string;
 
-
-
 /**
  *  Returns array with latitude and longitude, i.e.
  *  Array
