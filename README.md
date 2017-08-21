@@ -18,12 +18,15 @@ Installation
 	make
 	make install
 
-Add geohash.so to your php.ini.
+Add `extension=geohash.so` to your php.ini.
 	
 
 Usage
 ====
 ```php
+/**
+ *  Encodes latitude and longitude to geohash string with given precision.
+ */
 geohash_encode(float $latitude, float $longitude, int $precision=12): string;
 
 
