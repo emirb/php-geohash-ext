@@ -8,7 +8,6 @@ php:
   - 5.5
   - 5.4
   - nightly
-  - hhvm
 
 env:
   - NO_INTERACTION=1
