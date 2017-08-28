@@ -1,7 +1,7 @@
 PHP Geohash library
 =======
 [![Build Status](https://travis-ci.org/emirb/php-geohash-ext.svg?branch=master)](https://travis-ci.org/emirb/php-geohash-ext)
-[![Codecov](https://img.shields.io/codecov/c/github/emirb/php-geohash-ext.svg)]()
+[![codecov.io](https://codecov.io/gh/emirb/php-geohash-ext/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/github/emirb/php-geohash-ext?branch=master)
 ![PHP >5.4](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg)
 
 Introduction
