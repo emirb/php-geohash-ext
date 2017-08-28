@@ -13,10 +13,16 @@ env:
   - NO_INTERACTION=1
 
 before_script:
-  - phpize && ./configure && make clean && make
+  - phpize
+  - LDFLAGS="-lgcov" CFLAGS="-Wall -fno-strict-aliasing -coverage -O0" ./configure 
+  - make all
 
 script:
   - make test && if [ -f tests/001.diff ]; then echo "Tests failed" && exit 1; fi
   - make install
   - echo "extension = geohash.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - php example.php
+  - gcov --object-directory .libs *.c
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
