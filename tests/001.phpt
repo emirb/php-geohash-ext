@@ -11,6 +11,8 @@ echo geohash_encode(95, 95, 6).PHP_EOL;
 echo geohash_encode(185, 185, 12).PHP_EOL;
 echo geohash_encode(-185, -90, 12).PHP_EOL;
 var_dump(geohash_decode('ezs42'));
+$ext = new ReflectionExtension('geohash');
+$ext->info();
 ?>
 --EXPECT--
 u2edjnw17enr
@@ -25,3 +27,8 @@ array(2) {
   ["longitude"]=>
   float(-5.60302734375)
 }
+
+geohash
+
+geohash support => enabled
+geohash version => 1.0
