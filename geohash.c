@@ -8,6 +8,49 @@
 #include "ext/standard/info.h"
 #include "php_geohash.h"
 
+typedef struct IntervalStruct {
+
+    double high;
+    double low;
+
+} Interval;
+
+typedef struct GeoBoxDimensionStruct {
+
+    double height;
+    double width;
+
+} GeoBoxDimension;
+
+typedef struct GeoCoordStruct {
+
+    double latitude;
+    double longitude;
+    
+    double north;
+    double east;
+    double south;
+    double west;
+    
+    GeoBoxDimension dimension;
+
+} GeoCoord;
+
+#define MAX_LAT             90.0
+#define MIN_LAT             -90.0
+
+#define MAX_LONG            180.0
+#define MIN_LONG            -180.0
+
+#define MAX_HASH_LENGTH 22
+
+#define NORTH               0
+#define EAST                1
+#define SOUTH               2
+#define WEST                3
+
+#define LENGTH_OF_DEGREE  111100        // meters
+
 static char char_map[32] =  "0123456789bcdefghjkmnpqrstuvwxyz";
 
 static char*
@@ -221,10 +264,10 @@ zend_module_entry geohash_module_entry = {
 #endif
     "geohash",                    /* Extension name */
     geohash_functions,            /* zend_function_entry */
-    NULL,                           /* PHP_MINIT - Module initialization */
-    NULL,                           /* PHP_MSHUTDOWN - Module shutdown */
-    NULL,            /* PHP_RINIT - Request initialization */
-    NULL,                           /* PHP_RSHUTDOWN - Request shutdown */
+    NULL,                         /* PHP_MINIT - Module initialization */
+    NULL,                         /* PHP_MSHUTDOWN - Module shutdown */
+    NULL,                         /* PHP_RINIT - Request initialization */
+    NULL,                         /* PHP_RSHUTDOWN - Request shutdown */
     PHP_MINFO(geohash),           /* PHP_MINFO - Module info */
 #if ZEND_MODULE_API_NO >= 20010901
     PHP_GEOHASH_VERSION,

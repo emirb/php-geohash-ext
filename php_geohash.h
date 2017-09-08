@@ -41,50 +41,6 @@ extern zend_module_entry geohash_module_entry;
 #endif
 
 
-#define MAX_LAT             90.0
-#define MIN_LAT             -90.0
-
-#define MAX_LONG            180.0
-#define MIN_LONG            -180.0
-
-#define MAX_HASH_LENGTH 22
-
-#define NORTH               0
-#define EAST                1
-#define SOUTH               2
-#define WEST                3
-
-#define LENGTH_OF_DEGREE  111100        // meters
-
-typedef struct IntervalStruct {
-    
-    double high;
-    double low;
-    
-} Interval;
-
-typedef struct GeoBoxDimensionStruct {
-  
-  double height;
-  double width;
-
-} GeoBoxDimension;
-
-typedef struct GeoCoordStruct {
-    
-    double latitude;
-    double longitude;
-    
-    double north;
-    double east;
-    double south;
-    double west;
-
-  GeoBoxDimension dimension;
-    
-} GeoCoord;
-
-
 PHP_MINIT_FUNCTION(geohash);
 PHP_MSHUTDOWN_FUNCTION(geohash);
 PHP_RINIT_FUNCTION(geohash);
