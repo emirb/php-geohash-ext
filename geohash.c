@@ -16,7 +16,7 @@ _geohash_encode(double lat, double lng, int precision) {
     char* hash;
 
 
-    hash = (char*)emalloc(sizeof(char) * (precision + 1));
+    hash = (char*)safe_emalloc(sizeof(char) * (precision + 1), 1, 0);
     if (hash == NULL)
         return NULL;
 
