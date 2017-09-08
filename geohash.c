@@ -1,11 +1,32 @@
-/* Geohash extension for PHP */
+/* 
+ * Geohash extension for PHP
+ * 
+ * Copyright (c) 2017 Emir Beganovic. All rights reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ * @package     php_geohash
+ * @author      Emir Beganovic <emir@php.net>
+ * @copyright   2017 Emir Beganovic
+ * @license     http://www.opensource.org/licenses/mit-license.php  MIT License
+*/
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
-
-#include "php.h"
-#include "ext/standard/info.h"
 #include "php_geohash.h"
 
 typedef struct IntervalStruct {
@@ -15,24 +36,10 @@ typedef struct IntervalStruct {
 
 } Interval;
 
-typedef struct GeoBoxDimensionStruct {
-
-    double height;
-    double width;
-
-} GeoBoxDimension;
-
 typedef struct GeoCoordStruct {
 
     double latitude;
     double longitude;
-    
-    double north;
-    double east;
-    double south;
-    double west;
-    
-    GeoBoxDimension dimension;
 
 } GeoCoord;
 
@@ -42,14 +49,14 @@ typedef struct GeoCoordStruct {
 #define MAX_LONG            180.0
 #define MIN_LONG            -180.0
 
-#define MAX_HASH_LENGTH 22
+#define MAX_HASH_LENGTH     22
 
 #define NORTH               0
 #define EAST                1
 #define SOUTH               2
 #define WEST                3
 
-#define LENGTH_OF_DEGREE  111100        // meters
+#define LENGTH_OF_DEGREE    111100        // meters
 
 static char char_map[32] =  "0123456789bcdefghjkmnpqrstuvwxyz";
 
@@ -59,7 +66,7 @@ _geohash_encode(double lat, double lng, int precision) {
     char* hash;
 
 
-    hash = (char*)safe_emalloc(sizeof(char) * (precision + 1), 1, 0);
+    hash = (char*)safe_emalloc(precision, sizeof(char), 1);
     if (hash == NULL)
         return NULL;
 

@@ -31,4 +31,4 @@ array(2) {
 geohash
 
 geohash support => enabled
-geohash version => 1.0
+geohash version => 1.0.0
