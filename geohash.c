@@ -142,48 +142,41 @@ static unsigned int index_for_char(char c, char *string) {
 GeoCoord _geohash_decode(char *hash) {
 
     GeoCoord coordinate = {0.0, 0.0};
+    int char_amount = strlen(hash);
 
-    if (hash) {
+    if (char_amount) {
 
-        int char_amount = strlen(hash);
+        int char_mapIndex;
+        Interval lat_interval = {MAX_LAT, MIN_LAT};
+        Interval lng_interval = {MAX_LONG, MIN_LONG};
+        Interval *interval;
 
-        if(char_amount) {
+        int is_even = 1;
+        double delta;
+        int i, j;
+        for(i = 0; i < char_amount; i++) {
 
-            unsigned int char_mapIndex;
-            Interval lat_interval = {MAX_LAT, MIN_LAT};
-            Interval lng_interval = {MAX_LONG, MIN_LONG};
-            Interval *interval;
+            char_mapIndex = index_for_char(hash[i], (char*)char_map);
 
-            int is_even = 1;
-            double delta;
-            int i, j;
-            for(i = 0; i < char_amount; i++) {
+            // Interpret the last 5 bits of the integer
+            for(j = 0; j < 5; j++) {
 
-                char_mapIndex = index_for_char(hash[i], (char*)char_map);
+                interval = is_even ? &lng_interval : &lat_interval;
 
-                //JPM always false if(char_mapIndex < 0)
-                //JPM    break;
+                delta = (interval->high - interval->low) / 2.0;
 
-                // Interpret the last 5 bits of the integer
-                for(j = 0; j < 5; j++) {
+                if((char_mapIndex << j) & 0x0010)
+                    interval->low += delta;
+                else
+                    interval->high -= delta;
 
-                    interval = is_even ? &lng_interval : &lat_interval;
-
-                    delta = (interval->high - interval->low) / 2.0;
-
-                    if((char_mapIndex << j) & 0x0010)
-                        interval->low += delta;
-                    else
-                        interval->high -= delta;
-
-                    is_even = !is_even;
-                }
-
+                is_even = !is_even;
             }
 
-            coordinate.latitude = lat_interval.high - ((lat_interval.high - lat_interval.low) / 2.0);
-            coordinate.longitude = lng_interval.high - ((lng_interval.high - lng_interval.low) / 2.0);
         }
+
+        coordinate.latitude = lat_interval.high - ((lat_interval.high - lat_interval.low) / 2.0);
+        coordinate.longitude = lng_interval.high - ((lng_interval.high - lng_interval.low) / 2.0);
     }
 
     return coordinate;
@@ -197,17 +190,26 @@ PHP_FUNCTION(geohash_encode)
 {
     double lat;
     double lng;
+
+    #if ZEND_MODULE_API_NO >= 20151012
+    zend_long precision = 12;
+    #else 
     long precision = 12;
+    #endif
+
+
     zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &lat, &lng, &precision);
     char *hash;
     hash = _geohash_encode(lat, lng, precision);
     #if PHP_MAJOR_VERSION < 7
-    RETURN_STRING(hash, 0);
+        RETURN_STRING(hash, 0);
     #else
-    RETURN_STRING(hash);
+        RETURN_STRING(hash);
     #endif
 
-    efree(hash);
+    #if PHP_MAJOR_VERSION >= 7
+        efree(hash);
+    #endif
 }
 
 
@@ -216,10 +218,15 @@ PHP_FUNCTION(geohash_encode)
 PHP_FUNCTION(geohash_decode)
 {
     char *hash;
-    long hash_len;
+
+    #if PHP_MAJOR_VERSION >= 7
+        size_t hash_len;
+    #else
+        int hash_len;
+    #endif
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &hash, &hash_len) == FAILURE) {
-            return;
+        return;
     }
 
     GeoCoord area =  _geohash_decode(hash);
@@ -257,8 +264,8 @@ ZEND_END_ARG_INFO()
 /* {{{ geohash_functions[]
  */
 const zend_function_entry geohash_functions[] = {
-    PHP_FE(geohash_encode,      arginfo_geohash_encode)
-        PHP_FE(geohash_decode,          arginfo_geohash_decode)
+    PHP_FE(geohash_encode, arginfo_geohash_encode)
+    PHP_FE(geohash_decode, arginfo_geohash_decode)
     PHP_FE_END
 };
 /* }}} */
@@ -266,9 +273,7 @@ const zend_function_entry geohash_functions[] = {
 /* {{{ geohash_module_entry
  */
 zend_module_entry geohash_module_entry = {
-#if ZEND_MODULE_API_NO >= 20010901
     STANDARD_MODULE_HEADER,
-#endif
     "geohash",                    /* Extension name */
     geohash_functions,            /* zend_function_entry */
     NULL,                         /* PHP_MINIT - Module initialization */
@@ -276,9 +281,7 @@ zend_module_entry geohash_module_entry = {
     NULL,                         /* PHP_RINIT - Request initialization */
     NULL,                         /* PHP_RSHUTDOWN - Request shutdown */
     PHP_MINFO(geohash),           /* PHP_MINFO - Module info */
-#if ZEND_MODULE_API_NO >= 20010901
     PHP_GEOHASH_VERSION,
-#endif
     STANDARD_MODULE_PROPERTIES
 };
 /* }}} */
