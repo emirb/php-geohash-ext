@@ -1,5 +1,6 @@
 language: php
 sudo: false
+
 php:
   - 7.2
   - 7.1
@@ -14,15 +15,12 @@ env:
 
 before_script:
   - phpize
-  - LDFLAGS="-lgcov" CFLAGS="-Wall -fno-strict-aliasing -coverage -O0" ./configure 
-  - make all
+  - EXTRA_LDFLAGS="-precious-files-regex .libs/geohash.gcno" LDFLAGS="-lgcov" CFLAGS="-Wall -fno-strict-aliasing -coverage -O0" ./configure
+  - make test && if ls tests/*.diff >/dev/null 2>&1; then echo "Tests failed" && exit 1; fi
+  - gcov --object-directory .libs *.c
+  - bash <(curl -s https://codecov.io/bash)
 
 script:
-  - make test && if [ -f tests/001.diff ]; then echo "Tests failed" && exit 1; fi
   - make install
   - echo "extension = geohash.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - php example.php
-  - gcov --object-directory .libs *.c
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
