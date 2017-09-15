@@ -49,15 +49,6 @@ typedef struct GeoCoordStruct {
 #define MAX_LONG            180.0
 #define MIN_LONG            -180.0
 
-#define MAX_HASH_LENGTH     22
-
-#define NORTH               0
-#define EAST                1
-#define SOUTH               2
-#define WEST                3
-
-#define LENGTH_OF_DEGREE    111100        // meters
-
 static char char_map[32] =  "0123456789bcdefghjkmnpqrstuvwxyz";
 
 static char*
@@ -65,10 +56,7 @@ _geohash_encode(double lat, double lng, int precision) {
 
     char* hash;
 
-
     hash = (char*)safe_emalloc(precision, sizeof(char), 1);
-    if (hash == NULL)
-        return NULL;
 
     hash[precision] = '\0';
 
