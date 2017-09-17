@@ -179,23 +179,19 @@ PHP_FUNCTION(geohash_encode)
     double lat;
     double lng;
 
-    #if ZEND_MODULE_API_NO >= 20151012
-    zend_long precision = 12;
+    #if PHP_MAJOR_VERSION >= 7
+        zend_long precision = 12;
     #else 
-    long precision = 12;
+        long precision = 12;
     #endif
-
 
     zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &lat, &lng, &precision);
     char *hash;
     hash = _geohash_encode(lat, lng, precision);
     #if PHP_MAJOR_VERSION < 7
-        RETURN_STRING(hash, 0);
+        RETVAL_STRING(hash, 0);
     #else
-        RETURN_STRING(hash);
-    #endif
-
-    #if PHP_MAJOR_VERSION >= 7
+        RETVAL_STRING(hash);
         efree(hash);
     #endif
 }
@@ -220,8 +216,8 @@ PHP_FUNCTION(geohash_decode)
     GeoCoord area =  _geohash_decode(hash);
 
     array_init(return_value);
-    add_assoc_double(return_value,"latitude",area.latitude);
-    add_assoc_double(return_value,"longitude",area.longitude);
+    add_assoc_double(return_value, "latitude", area.latitude);
+    add_assoc_double(return_value, "longitude", area.longitude);
 }
 
 /* }}}*/
